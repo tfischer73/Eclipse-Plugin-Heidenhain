@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="EclipsePluginHeidenhain"
+      label="Eclipse Plugin Heidenhain"
+      version="1.2.1.qualifier">
+
+   <description>
+      Dieses Plugin stellt Funktionen zur Übertragun von Dateien auf Heidenhain-Steuerungen zur verfügung
+   </description>
+
+   <copyright url="-">
+      Copyright 2015 Thomas Fischer
+   </copyright>
+
+   <license url="">
+      -
+   </license>
+
+   <url>
+      <update label="site.xml" url="http://tfischer73.github.io/Eclipse-Plugin-Heidenhain/update"/>
+   </url>
+
+   <plugin
+         id="ch.tfischer.hh"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
