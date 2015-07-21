@@ -90,7 +90,7 @@ header h2 {
 }
 
 .inner {
-  width: 620px;
+  width: 800px;
   margin: 0 auto;
 }
 
@@ -168,12 +168,6 @@ a.button span {
 #plugins span {
   background: transparent url(../images/plugins-icon.png) 12px 50% no-repeat;
 }
-#info span {
-  background: transparent url(../images/Info-icon.png) 12px 50% no-repeat;
-}
-#help span {
-  background: transparent url(../images/Help-icon.png) 12px 50% no-repeat;
-}
 #view-on-github {
   margin-right: 0;
 }
@@ -240,7 +234,8 @@ th {
 
 td {
   font-weight: 300;
-  text-align: center;
+  text-align: left;
+  padding: 5 5 5 5px;
   border: 1px solid #ebebeb;
 }
 
