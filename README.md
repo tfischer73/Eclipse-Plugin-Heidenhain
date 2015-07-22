@@ -5,3 +5,4 @@ Das Plugin ermöglicht es Dateien aus Eclipse auf Heidenhain-Steuerungen zuüber
 
 **Voraussetzung ist Eclipse Version 4.4.2 und höher & PyDev**
 
+[Weitere Infos unter "tfischer73.github.io/Eclipse-Plugin-Heidenhain"](http://tfischer73.github.io/Eclipse-Plugin-Heidenhain)
