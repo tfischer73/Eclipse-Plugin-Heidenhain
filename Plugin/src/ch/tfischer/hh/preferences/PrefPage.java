@@ -7,6 +7,7 @@ package ch.tfischer.hh.preferences;
  **/
 
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -23,11 +24,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-
-
-
-
-
+import org.osgi.framework.Bundle;
+import org.osgi.framework.Version;
 
 import ch.tfischer.hh.Activator;
 import ch.tfischer.hh.data.Global;
@@ -99,7 +97,17 @@ public class PrefPage extends PreferencePage implements IWorkbenchPreferencePage
         gridLayout.verticalSpacing =10;
         content.setLayout(gridLayout);
 
-        Group groupPython = new Group(content, SWT.NONE);
+        Bundle bundle = Platform.getBundle("ch.tfischer.hh");
+        Version version = bundle.getVersion();
+        
+        Label pluginVersion = new Label(content, SWT.NONE);
+        pluginVersion.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+        pluginVersion.setText("Version: " + version.getMajor() + "." + version.getMinor() + "." + version.getMicro());
+
+        Label separator = new Label(content, SWT.HORIZONTAL | SWT.SEPARATOR);
+        separator.setLayoutData(new GridData(GridData.FILL, SWT.CENTER, true, false, 2, 1));
+        
+		Group groupPython = new Group(content, SWT.NONE);
 		groupPython.setLayout(new GridLayout(1, true));
 		groupPython.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		groupPython.setText("Python-Verzeichnis auf der Steuerung");
