@@ -1,9 +1,4 @@
 
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <category-def name="PluginHeidenhain" label="Eclipse Plugin Heidenhain">
-      <description>
-         Funktionen zur Übertragung von Dateien auf Heidenhain-Steuerung
-      </description>
-   </category-def>
 </site>
