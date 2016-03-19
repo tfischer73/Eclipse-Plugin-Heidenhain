@@ -1,12 +1,12 @@
 
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-  <feature url="features/EclipsePluginHeidenhain_1.2.2.201603191127.jar" id="EclipsePluginHeidenhain" version="1.2.2.201603191127">
-    <category name="Eclipse-Plugin-Heidenhain/>
-  </feature>
-  <category-def name="Eclipse-Plugin-Heidenhain" label="Eclipse-Plugin-Heidenhain">
-    <description>
-       XML Editor - XSLT Debugger
-    </description>
-  </category-def>
+   <feature url="features/EclipsePluginHeidenhain_1.2.1.201507211538.jar" id="EclipsePluginHeidenhain" version="1.2.1.201507211538">
+      <category name="PluginHeidenhain"/>
+   </feature>
+   <category-def name="PluginHeidenhain" label="Eclipse Plugin Heidenhain">
+      <description>
+         Funktionen zur Übertragung von Dateien auf Heidenhain-Steuerung
+      </description>
+   </category-def>
 </site>
