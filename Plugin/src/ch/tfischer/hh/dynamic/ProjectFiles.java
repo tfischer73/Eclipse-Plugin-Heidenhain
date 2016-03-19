@@ -104,7 +104,7 @@ public class ProjectFiles {
 			return false;
 		}
 		for ( String transferFile:Global.transferFiles ){
-			if ( fileName.endsWith(transferFile) ) {
+			if ( fileName.toLowerCase().endsWith(transferFile.toLowerCase()) ) {
 				return true;
 			}
 		}
