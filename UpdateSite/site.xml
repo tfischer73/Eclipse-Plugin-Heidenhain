@@ -3,6 +3,9 @@
    <feature url="features/EclipsePluginHeidenhain_1.2.1.201507211538.jar" id="EclipsePluginHeidenhain" version="1.2.1.201507211538">
       <category name="PluginHeidenhain"/>
    </feature>
+   <feature url="features/EclipsePluginHeidenhain_1.2.2.201603191127.jar" id="EclipsePluginHeidenhain" version="1.2.2.201603191127">
+      <category name="PluginHeidenhain"/>
+   </feature>
    <category-def name="PluginHeidenhain" label="Eclipse Plugin Heidenhain">
       <description>
          Funktionen zur Übertragung von Dateien auf Heidenhain-Steuerung
