@@ -1,4 +1,7 @@
 package ch.tfischer.hh.handlers;
+/*
+ * Windows Explorer öffnen
+ */
 
 
 import java.io.IOException;
