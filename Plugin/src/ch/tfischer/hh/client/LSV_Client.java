@@ -421,12 +421,16 @@ private static 		InputStreamReader in;
 
 		@SuppressWarnings("unused")
 		boolean binary = false;
-		for ( String binFile : Global.binFiles ) {
-			if ( filename.toLowerCase().endsWith(binFile) ){
-				s += Character.toString ((char) 1);
-				binary = true;
-				break;
+		if (Global.prefAllwaysBinary == false) {
+			for ( String binFile : Global.binFiles ) {
+				if ( filename.toLowerCase().endsWith(binFile) ){
+					s += Character.toString ((char) 1);
+					binary = true;
+					break;
+				}
 			}
+		} else {
+			binary = true;
 		}
 
 		int length = s.length();

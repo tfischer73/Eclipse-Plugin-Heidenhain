@@ -39,21 +39,32 @@ public class Preferences {
 		return preferenceStore.getString(PrefPage.PREF_PYTHON_PATH);
 	}
 
-	
+
 	//=========================================================================
-	public static void setIP(String ip) {
-		Global.prefIP = ip;
-		if ( Global.prefLocalhost == false ) {
-			Global.IP = ip;
-		}
+	public static void setUseIp(int useIp) {
+		Global.prefUseIp = useIp;
 		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-		preferenceStore.setValue(PrefPage.PREF_IP, ip);
+		preferenceStore.setValue(PrefPage.PREF_USE_IP, useIp);
 	}
 
 	//=========================================================================
-	public static String getIP() {
+	public static int getUseIp() {
 		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-		return preferenceStore.getString(PrefPage.PREF_IP);
+		return preferenceStore.getInt(PrefPage.PREF_USE_IP);
+	}
+
+
+	//=========================================================================
+	public static void setIPs(String[] useIPs) {
+		Global.prefIPs = useIPs;
+		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+		preferenceStore.setValue(PrefPage.PREF_IPS, String.join(""+(char)0,useIPs));
+	}
+
+	//=========================================================================
+	public static String[] getIPs() {
+		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+		return preferenceStore.getString(PrefPage.PREF_IPS).split(""+(char) 0);
 	}
 
 
@@ -73,11 +84,6 @@ public class Preferences {
 
 	//=========================================================================
 	public static void setLocalhost(boolean localhost) {
-		if ( localhost ) {
-			Global.IP = "localhost";
-		} else {
-			Global.IP = Global.prefIP;
-		}
 		Global.prefLocalhost = localhost;
 		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
 		preferenceStore.setValue(PrefPage.PREF_LOCALHOST, localhost);
@@ -162,6 +168,20 @@ public class Preferences {
 	public static String getBinFiles() {
 		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
 		return preferenceStore.getString(PrefPage.PREF_BIN_FILES);
+	}
+
+
+	//=========================================================================
+	public static void setAllwaysBinary(boolean allwaysBinary) {
+		Global.prefAllwaysBinary = allwaysBinary;
+		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+		preferenceStore.setValue(PrefPage.PREF_ALLWAYS_BINARY, allwaysBinary);
+	}
+
+	//=========================================================================
+	public static boolean getAllwaysBinary() {
+		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+		return preferenceStore.getBoolean(PrefPage.PREF_ALLWAYS_BINARY);
 	}
 
 

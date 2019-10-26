@@ -23,12 +23,14 @@ public class Global {
 	// Preferences
 	public static String prefPythonPath;
 	public static String prefPasswort;
-	public static String prefIP;
+    public static String[] prefIPs;
 	public static String prefPort;
+	public static int prefUseIp;
 	public static boolean prefLocalhost;
 	public static boolean prefNotConfirm;
 	public static boolean prefTelegram;
 	public static boolean prefTelegramHex;
+	public static boolean prefAllwaysBinary;
 	public static String prefBinFiles;
 	public static String prefTransferFiles;
 	public static boolean prefMkDir;
