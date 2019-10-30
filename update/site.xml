@@ -1,5 +1,5 @@
 <site>
-   <feature url="features/EclipsePluginHeidenhain_1.2.2.201603191127.jar" id="EclipsePluginHeidenhain" version="1.2.2.201603191127">
+   <feature url="features/EclipsePluginHeidenhain_2.0.0.201910301651.jar" id="EclipsePluginHeidenhain" version="2.0.0.201910301651">
       <category name="PluginHeidenhain"/>
    </feature>
    <category-def name="PluginHeidenhain" label="Eclipse Plugin Heidenhain">

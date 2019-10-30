@@ -27,6 +27,9 @@
 	        <img src="images/hilfe/menu.png"> 
 	        <table>
 	          <tr>
+	            <td>Logfile laden</td> 
+	            <td>Das Logfile "LOG:\oem\python\pythonprint" von der Steuerung laden und in Eclipse anzeigen</td> 
+	          </tr><tr>
 	            <td>Download</td> 
 	            <td>Aktive Datei im Editor auf die Steuerung übertragen</td> 
 	          </tr><tr>
@@ -43,6 +46,9 @@
           <img src="images/hilfe/toolbar.png"> 
           <table>
             <tr>
+              <td><img src="images/hilfe/logfile.png"> </td> 
+              <td>Das Logfile "LOG:\oem\python\pythonprint" von der Steuerung laden und in Eclipse anzeigen</td> 
+            </tr><tr>
               <td><img src="images/hilfe/download.png"> </td> 
               <td>Aktive Datei im Editor auf die Steuerung übertragen</td> 
             </tr><tr>
@@ -65,13 +71,31 @@
           </table>
           
           <hr>
-          <h2>Einstellungen</h2>
-          <img src="images/hilfe/preferences.png"> 
+          <h2>Einstellungen - Netzwerk</h2>
+          <img src="images/hilfe/preferences_network.png"> 
+          <table>
+            <tr>
+            	<td></td>
+              <td>Die Netzwerkadresse der Steuerung auf welche die Daten übertragen werden</td> 
+            </tr><tr>
+              <td></td>
+              <td>localhost</td> 
+            </tr><tr>
+              <td>Portnummer</td> 
+              <td>Portnummer die für die Übertragung verwendet wird.<br>
+                  Sollte nicht geändert werden!</td> 
+            </tr>
+          </table>
+          <h2>Einstellungen - Allgemein</h2>
+          <img src="images/hilfe/preferences_general.png"> 
           <table>
             <tr>
               <td>Python-Verzeichnis auf der Steuerung</td> 
               <td>Grundverzeichnis auf der Steuerung.<br> 
                   Alle Dateien und Ordner eines Projektes werden in das angegebene Verzeichnis übertragen</td> 
+            </tr><tr>
+              <td>Logfile auf der Steuerung</td> 
+              <td>Logfile das auf den PC übertragen werden soll.</td> 
             </tr><tr>
               <td>Transfer-Dateien</td> 
               <td>Die Dateiendungen der Dateien welche auf die Steuerung übertragen werden sollen</td> 
@@ -83,22 +107,20 @@
               <td>Gespeichertes Passwort<br>
                   Sollte ein Passwort benötigt werden und es ist keines oder das falsche eingetragen, wird bei der Übertragung nach dem Passwort gefragt.</td> 
             </tr><tr>
-              <td>IP-Adresse</td> 
-              <td>Die Netzwerkadresse der Steuerung auf welche die Daten übertragen werden</td> 
-            </tr><tr>
-              <td>Portnummer</td> 
-              <td>Portnummer die für die Übertragung verwendet wird.<br>
-                  Sollte nicht geändert werden!</td> 
-            </tr><tr>
-              <td>Localhost/IP-Adresse</td> 
-              <td>Auswahl Localhost oder IP-Adresse</td> 
-            </tr><tr>
               <td>Up/Download ohne Nachfrage</td> 
               <td>Ist die Option gesetzt wird die Datenübertragung ohne nachfrage gestartet</td> 
-            </tr><tr>
+            </tr>
+          </table>
+          <h2>Einstellungen - Debug</h2>
+          <img src="images/hilfe/preferences_debug.png"> 
+          <table>
+            <tr>
               <td>LSV Telegramme in Konsole ausgeben</td> 
               <td>Die Netzwerk-Kommunikation wird in der Konsole ausgegeben<br>
                   Diese Option ist nur für Debug zwecke und sollte für den normalen gebrauch nicht aktiviert sein</td> 
+            </tr><tr>
+              <td>als HEX-Daten ausgeben</td> 
+              <td>die LSV-Telegramme werden in HEX ausgegeben</td> 
             </tr>
           </table>
   
