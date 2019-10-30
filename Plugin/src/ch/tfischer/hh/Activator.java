@@ -1,6 +1,9 @@
 package ch.tfischer.hh;
 
+import java.util.Optional;
+
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ResourceLocator;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -64,7 +67,8 @@ public class Activator extends AbstractUIPlugin {
 	 * @param path the path
 	 * @return the image descriptor
 	 */
-	public static ImageDescriptor getImageDescriptor(String path) {
-		return imageDescriptorFromPlugin(PLUGIN_ID, path);
+	public static Optional<ImageDescriptor> getImageDescriptor(String path) {
+		return ResourceLocator.imageDescriptorFromBundle(PLUGIN_ID, path);
+		//return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 }

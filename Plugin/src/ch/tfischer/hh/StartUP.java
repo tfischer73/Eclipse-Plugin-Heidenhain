@@ -27,6 +27,7 @@ public class StartUP implements IStartup {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		Global.prefPasswort = Preferences.xor(store.getString(PrefPage.PREF_PASSWORD),PrefPage.PREF_KEY);
 		Global.prefPythonPath = store.getString(PrefPage.PREF_PYTHON_PATH);
+		Global.prefLogfilePath = store.getString(PrefPage.PREF_LOGFILE_PATH);
         String ips = store.getString(PrefPage.PREF_IPS);
         Global.prefIPs = ips.split("" + (char) 0 );
         Global.prefUseIp = store.getInt(PrefPage.PREF_USE_IP);

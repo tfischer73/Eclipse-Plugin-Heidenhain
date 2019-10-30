@@ -105,10 +105,10 @@ public class LSV_SysParam {
 	}
 	
 	private static int makeInteger(String data, int pos){
-		return buffer[pos] << 8 + buffer[pos+1];
+		return ((buffer[pos] & 0xFF) << 8 + (buffer[pos+1] & 0xFF));
 	}
 
 	private static int makeLong(String data, int pos){
-		return (buffer[pos] << 24 | buffer[pos + 1] << 16 | buffer[pos + 2] << 8 | buffer[pos + 1]);
+		return ((buffer[pos] & 0xFF) << 24 | (buffer[pos + 1] & 0xFF) << 16 | (buffer[pos + 2] & 0xFF) << 8 | (buffer[pos + 1] & 0xFF));
 	}
 }

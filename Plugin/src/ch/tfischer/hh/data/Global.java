@@ -7,7 +7,6 @@ package ch.tfischer.hh.data;
 
 import java.util.ArrayList;
 
-
 import ch.tfischer.hh.toolbar.ToolbarSelectionListener;
 
 public class Global {
@@ -22,6 +21,7 @@ public class Global {
 	
 	// Preferences
 	public static String prefPythonPath;
+	public static String prefLogfilePath;
 	public static String prefPasswort;
     public static String[] prefIPs;
 	public static String prefPort;
@@ -34,5 +34,5 @@ public class Global {
 	public static String prefBinFiles;
 	public static String prefTransferFiles;
 	public static boolean prefMkDir;
-	
+
 }

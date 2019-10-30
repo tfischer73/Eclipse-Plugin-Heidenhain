@@ -34,9 +34,23 @@ public class Preferences {
 	}
 
 	//=========================================================================
-	public static String GetPythonPath() {
+	public static String getPythonPath() {
 		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
 		return preferenceStore.getString(PrefPage.PREF_PYTHON_PATH);
+	}
+
+
+	//=========================================================================
+	public static void setLogfilePath(String logfile) {
+		Global.prefLogfilePath = logfile;
+		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+		preferenceStore.setValue(PrefPage.PREF_LOGFILE_PATH, logfile);
+	}
+
+	//=========================================================================
+	public static String getLogfilePath() {
+		IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+		return preferenceStore.getString(PrefPage.PREF_LOGFILE_PATH);
 	}
 
 

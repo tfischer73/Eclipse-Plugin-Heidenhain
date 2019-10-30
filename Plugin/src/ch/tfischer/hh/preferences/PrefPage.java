@@ -7,8 +7,6 @@ package ch.tfischer.hh.preferences;
  **/
 
 
-import javax.print.DocFlavor.STRING;
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
@@ -45,6 +43,7 @@ public class PrefPage extends PreferencePage implements IWorkbenchPreferencePage
 	public static final String  PREF_KEY = "qaywsxedcrfvtgbzhnujmikolp";
 	public static final String  PREF_PASSWORD     		= "Password";
 	public static final String  PREF_PYTHON_PATH  		= "PythonPath";
+	public static final String  PREF_LOGFILE_PATH  		= "LogfilePath";
 	public static final String  PREF_TRANSFER_FILES		= "transferFiles";
 	public static final String  PREF_BIN_FILES    		= "BinFiles";
 	public static final String  PREF_ALLWAYS_BINARY     = "AllwaysBinary";
@@ -58,6 +57,7 @@ public class PrefPage extends PreferencePage implements IWorkbenchPreferencePage
 	
 	public static final String  DEFAULT_PASSWORD      	= "";
 	public static final String  DEFAULT_PYTHON_PATH   	= "PLC:\\Python\\";
+	public static final String  DEFAULT_LOGFILE_PATH   	= "LOG:\\oem\\python\\pythonprint";
 	public static final String  DEFAULT_TRANSFER_FILES	= ".bmp .bmx .cfg .chm .gif .ico .jpg .jpeg .png .py .spj .xpm .xrs";
 	public static final String  DEFAULT_BIN_FILES     	= ".bmp .bmx .chm .gif .ico .jpg .jpeg .png .xpm";
 	public static final boolean DEFAULT_ALLWAYS_BINARY 	= true;
@@ -70,6 +70,7 @@ public class PrefPage extends PreferencePage implements IWorkbenchPreferencePage
 	public static final boolean DEFAULT_TELEGRAM_HEX 	= false;
 
 	private Text pythonPath;
+	private Text logfilePath;
 	private Text transferFiles;
 	private Text binFiles;
     private Text password;
@@ -216,6 +217,15 @@ public class PrefPage extends PreferencePage implements IWorkbenchPreferencePage
         pythonPath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 	    
         //---------------------------------------------------------------------
+		Group groupLogfile = new Group(compositGeneral, SWT.NONE);
+		groupLogfile.setLayout(new GridLayout(1, true));
+		groupLogfile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		groupLogfile.setText("Logfile auf der Steuerung");
+
+        logfilePath = new Text(groupLogfile, SWT.BORDER);
+        logfilePath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+	    
+        //---------------------------------------------------------------------
         Group groupTransferFiles = new Group(compositGeneral, SWT.NONE);
 		groupTransferFiles.setLayout(new GridLayout(1, true));
 		groupTransferFiles.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -305,6 +315,7 @@ public class PrefPage extends PreferencePage implements IWorkbenchPreferencePage
         selectedAsBinary.setSelection(!Global.prefAllwaysBinary);
         transferFiles.setText(Global.prefTransferFiles);
         pythonPath.setText(Global.prefPythonPath);
+        logfilePath.setText(Global.prefLogfilePath);
         port.setText(Global.prefPort);
 	    useLocalhost.setSelection(false);
 	    if (Global.prefLocalhost) {
@@ -343,11 +354,15 @@ public class PrefPage extends PreferencePage implements IWorkbenchPreferencePage
     protected void performApply() {
     	// Passwort sicher speichern 
     	Preferences.setPassword(password.getText());
+    	
+    	// Pfad anpassen
     	String python = pythonPath.getText().replaceAll("/", "\\");
     	while ( python.endsWith("\\" )){
     		python = python.substring(0, python.length()-1);
     	}
     	python = python.concat("\\");
+
+    	String logfile = logfilePath.getText().replaceAll("/", "\\");
 
     	// Netzwerk
     	cmbIpUpdate(); 	
@@ -358,6 +373,7 @@ public class PrefPage extends PreferencePage implements IWorkbenchPreferencePage
         
         // Allgemein
         Global.prefPythonPath = python;
+        Global.prefLogfilePath = logfile;
         Global.prefTransferFiles = transferFiles.getText();
         Global.prefBinFiles = binFiles.getText();
         Global.prefAllwaysBinary = allwaysBinary.getSelection();
@@ -382,6 +398,7 @@ public class PrefPage extends PreferencePage implements IWorkbenchPreferencePage
         preferenceStore.setValue(PREF_PORT, Global.prefPort);
     	preferenceStore.setValue(PREF_LOCALHOST, Global.prefLocalhost);
         preferenceStore.setValue(PREF_PYTHON_PATH, Global.prefPythonPath);
+        preferenceStore.setValue(PREF_LOGFILE_PATH, Global.prefLogfilePath);
         preferenceStore.setValue(PREF_TRANSFER_FILES, Global.prefTransferFiles);
         preferenceStore.setValue(PREF_BIN_FILES, Global.prefBinFiles);
         preferenceStore.setValue(PREF_ALLWAYS_BINARY, Global.prefAllwaysBinary);
@@ -409,6 +426,7 @@ public class PrefPage extends PreferencePage implements IWorkbenchPreferencePage
     	IPreferenceStore preferenceStore = getPreferenceStore();
         preferenceStore.setValue(PREF_PASSWORD, pw);
         preferenceStore.setValue(PREF_PYTHON_PATH, DEFAULT_PYTHON_PATH);
+        preferenceStore.setValue(PREF_LOGFILE_PATH, DEFAULT_LOGFILE_PATH);
         preferenceStore.setValue(PREF_TRANSFER_FILES, DEFAULT_TRANSFER_FILES);
         preferenceStore.setValue(PREF_BIN_FILES, DEFAULT_BIN_FILES);
         preferenceStore.setValue(PREF_ALLWAYS_BINARY, DEFAULT_ALLWAYS_BINARY);
@@ -422,6 +440,7 @@ public class PrefPage extends PreferencePage implements IWorkbenchPreferencePage
 
     	password.setText("");
         pythonPath.setText(DEFAULT_PYTHON_PATH);
+        logfilePath.setText(DEFAULT_LOGFILE_PATH);
         transferFiles.setText(DEFAULT_TRANSFER_FILES);
         binFiles.setText(DEFAULT_BIN_FILES);
         allwaysBinary.setSelection(DEFAULT_ALLWAYS_BINARY);

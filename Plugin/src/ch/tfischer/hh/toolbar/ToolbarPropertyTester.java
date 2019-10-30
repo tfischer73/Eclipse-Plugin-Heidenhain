@@ -9,6 +9,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import ch.tfischer.hh.client.Logfile;
 import ch.tfischer.hh.client.UpDownLoad;
 import ch.tfischer.hh.dynamic.PopupDownlod;
 
@@ -44,7 +45,9 @@ public class ToolbarPropertyTester extends PropertyTester {
 				if(page != null){
 					IPerspectiveDescriptor perspective = page.getPerspective();
 					if(perspective != null){
-						if ((UpDownLoad.lsvJob == null || UpDownLoad.lsvJob.getState() == Job.NONE) && (perspective.getLabel().equals("PyDev"))){
+						if ((UpDownLoad.lsvJob == null || UpDownLoad.lsvJob.getState() == Job.NONE) &&
+								(Logfile.lsvJob == null || Logfile.lsvJob.getState() == Job.NONE) && 
+								(perspective.getLabel().equals("PyDev"))){
 							return true;
 						}
 					}

@@ -13,6 +13,7 @@ import org.eclipse.ui.IWorkbenchListener;
 
 import ch.tfischer.hh.client.UpDownLoad;
 
+
 public class WBListener implements IWorkbenchListener {
 
     @Override

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
+<!DOCTYPE plugin>
 <plugin>
-
    <extension
          point="org.eclipse.ui.commands">
       <category
@@ -32,9 +32,24 @@
             id="ch.tfischer.hh.commands.popup.explorer"
             name="Explorer">
       </command>
+      <command
+            categoryId="ch.tfischer.hh.commands.category"
+            id="ch.tfischer.hh.commands.logfile"
+            name="Logfile">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
+      <handler
+            class="ch.tfischer.hh.handlers.LogfileHandler"
+            commandId="ch.tfischer.hh.commands.logfile">
+         <enabledWhen>
+            <test
+                  forcePluginActivation="true"
+                  property="ch.tfischer.hh.download">
+            </test>
+         </enabledWhen>
+      </handler>
       <handler
             commandId="ch.tfischer.hh.commands.download"
             class="ch.tfischer.hh.handlers.DownloadHandler">
@@ -103,6 +118,16 @@
                id="ch.tfischer.hh.menus.menu"
                label="Heidenhain">
             <command
+                  commandId="ch.tfischer.hh.commands.logfile"
+                  icon="icons/log.png"
+                  id="ch.tfischer.hh.menus.logfileCommand"
+                  label="Logfile laden">
+            </command>
+            <separator
+                  name="ch.tfischer.hh.menus.separator"
+                  visible="true">
+            </separator>
+            <command
                   commandId="ch.tfischer.hh.commands.download"
                   icon="icons/Download.png"
                   id="ch.tfischer.hh.menus.downloadCommand"
@@ -130,6 +155,13 @@
          <toolbar
                id="ch.tfischer.hh.toolbars.fehlmann"
                label="Heidenhain">
+            <command
+                  commandId="ch.tfischer.hh.commands.logfile"
+                  icon="icons/log.png"
+                  id="ch.tfischer.hh.toolbars.command.logfile"
+                  label="Logfile"
+                  tooltip="logfile">
+            </command>
             <command
                   commandId="ch.tfischer.hh.commands.download"
                   icon="icons/Download.png"
@@ -163,6 +195,18 @@
             </visibleWhen>
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:ch.tfischer.hh.view.logfile">
+         <command
+               commandId="ch.tfischer.hh.commands.logfile"
+               icon="icons/refresh.png"
+               id="ch.tfischer.hh.toolbars.command.logfile"
+               label="Logfile"
+               style="push"
+               tooltip="Logfile neu laden">
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
@@ -188,4 +232,15 @@
             type="java.lang.Object">
       </propertyTester>
    </extension>
-  </plugin>
+   <extension
+         name="Heidenhain"
+         point="org.eclipse.ui.views">
+      <view
+            class="ch.tfischer.hh.view.LogfileView"
+            icon="icons/log.png"
+            id="ch.tfischer.hh.view.logfile"
+            name="Logfile"
+            restorable="true">
+      </view>
+   </extension>
+</plugin>

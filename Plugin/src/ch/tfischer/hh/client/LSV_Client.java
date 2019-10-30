@@ -21,17 +21,11 @@ import java.net.SocketAddress;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
-
-
-
-
-
-
 import ch.tfischer.hh.console.Console;
 import ch.tfischer.hh.console.SyncWithUi;
 import ch.tfischer.hh.data.Global;
 import ch.tfischer.hh.toolbar.ToolbarSelectionListener;
+import ch.tfischer.hh.view.LogfileView;
 
 
 public class LSV_Client {
@@ -95,6 +89,7 @@ public class LSV_Client {
 	private static String newPasswort = null;
 	private static InputStream inFromServer = null;
 	private static OutputStreamWriter outToServer = null;
+	private static InputStreamReader in;
 
 	//static final ISchedulingRule mutex = new Mutex();
 
@@ -145,13 +140,13 @@ public class LSV_Client {
 		}
 	}
 
-	
+
 	// String senden / empfangen
 	//=========================================================================
 	private static boolean Send(String data) {
 		int length = 0;
 		String LSV_length="";
-    	byte[] buffer = new byte[4];
+		byte[] buffer = new byte[4];
     	
     	//alte Daten löschen
     	LSV_data = "";
@@ -160,20 +155,28 @@ public class LSV_Client {
 			outToServer.write(data); //.writeBytes(data);
 			outToServer.flush();
 
-	        inFromServer.read(buffer);
-	        length = (buffer[2] << 8) | buffer[3];
-	        LSV_length = new String(buffer, "UTF-8"); 
-	        
+			inFromServer.read(buffer);
+			// Achtung!! Byte müssen umgerechnet werden da es kein unsigned gibt !!!!
+			length = ((buffer[0] & 0xFF) << 24) | ((buffer[1] & 0xFF) << 16) | ((buffer[2] & 0xFF) << 8) | buffer[3] & 0xFF;
+			LSV_length = new String(buffer);//, "UTF-8");
+			//SyncWithUi.ConsolePrintln("length " + length,0);
+			SyncWithUi.ConsolePrint("",0,0); // TODO ohne SyncWithUi gibt es einen Fehler!
 	        //Info
 	        inFromServer.read(buffer);
-	        LSV_info = new String(buffer, "UTF-8");
+	        LSV_info = new String(buffer);//, "UTF-8");
+	        if ( length > 4096-8 ) {
+				SyncWithUi.ConsolePrint( now.format(new Date()).concat(" - "), Console.BLACK, 0 );
+				SyncWithUi.ConsolePrintln("ERROR: Buffer overflow" + length + " > 4088",Console.RED); 
+				is_timedout = true;
+				return false;	        
+	        }
 	        if ( length > 0 ) {
-	        	//Daten
-	        	buffer = new byte[length];	        	
+				//Daten
+				buffer = new byte[length];
 		        inFromServer.read(buffer);
 		        LSV_data = new String(buffer, "UTF-8");
-		        //syncWithUiConsolePrintln("LSV_data " + LSV_data);	        
-	        }
+				//SyncWithUi.ConsolePrintln("LSV_data " + LSV_data,0);	        
+			}
 		}catch ( IOException e ) {
 			SyncWithUi.ConsolePrint( now.format(new Date()).concat(" - "), Console.BLACK, 0 );
 			SyncWithUi.ConsolePrintln("ERROR: ".concat(e.toString()),Console.RED); 
@@ -239,22 +242,24 @@ public class LSV_Client {
 			 * eingeloggt werden kann
 			 **/
 			if ( newPasswort.isEmpty() == false) {
-		    	if (drive.equalsIgnoreCase("PLC:")) {
-		    		loggedin = Login(PW_FILEPLC, newPasswort);
-		    	} else if (drive.equalsIgnoreCase("SYS:")) {
-		    		loggedin = Login(PW_FILESYS, newPasswort);
-		    	} else {
-		    		loggedin = OK;
-		    	}
+				if (drive.equalsIgnoreCase("PLC:")) {
+					loggedin = Login(PW_FILEPLC, newPasswort);
+				} else if (drive.equalsIgnoreCase("LOG:")) {
+					loggedin = Login(PW_FILEPLC, newPasswort);
+				} else if (drive.equalsIgnoreCase("SYS:")) {
+					loggedin = Login(PW_FILESYS, newPasswort);
+				} else {
+					loggedin = OK;
+				}
 			}
-	    	if ( loggedin == TIMEOUT ) { 
-	    		return TIMEOUT; 
-	    	} else if (loggedin == ERROR) {
-	    		newPasswort = SyncWithUi.Passwort(newPasswort);
-		    	if (newPasswort == null) {
-	    			return ERROR;
-		    	}
-	    	}
+			if ( loggedin == TIMEOUT ) { 
+				return TIMEOUT; 
+			} else if (loggedin == ERROR) {
+				newPasswort = SyncWithUi.Passwort(newPasswort);
+				if (newPasswort == null) {
+					return ERROR;
+				}
+			}
 		}
 		return OK;
 	}
@@ -270,12 +275,12 @@ public class LSV_Client {
 		String loByte = Character.toString (((char) (length & 0xFF)));
 		String hiByte = Character.toString (((char) ((length >> 8) & 0xFF)));
 		String data = CHAR0.concat(CHAR0).concat(hiByte).concat(loByte).concat(s);
-    	if ( Send(data) == false ) { return TIMEOUT; }
-        if ( LSV_info.equals("T_OK") ) {
-        	return OK; 
-        }
-    	showLSVError();
-        return ERROR; 
+		if ( Send(data) == false ) { return TIMEOUT; }
+		if ( LSV_info.equals("T_OK") ) {
+			return OK; 
+		}
+		showLSVError();
+		return ERROR; 
 	}
 
 
@@ -289,58 +294,58 @@ public class LSV_Client {
 		String loByte = Character.toString (((char) (length & 0xFF)));
 		String hiByte = Character.toString (((char) ((length >> 8) & 0xFF)));
 		String data = CHAR0.concat(CHAR0).concat(hiByte).concat(loByte).concat(s);
-    	if ( Send(data) == false ) { return TIMEOUT; }
-        if ( LSV_info.equals("T_OK") ) {
-        	return OK; 
-        } else { 
-        	return ERROR; 
-        }
+		if ( Send(data) == false ) { return TIMEOUT; }
+		if ( LSV_info.equals("T_OK") ) {
+			return OK; 
+		} else { 
+			return ERROR; 
+		}
 	}
 
 
 	//=========================================================================
 	public static byte getInfo() {
 		String data = CHAR0.concat(CHAR0).concat(CHAR0).concat(CHAR0).concat("R_VR");
-    	if ( Send(data) == false ) { return TIMEOUT; }
-        if ( LSV_info.equals("S_VR") ) {
-        	String split[] = LSV_data.split(CHAR0);
-        	int l = split.length;
-        	if ( l >= 0 ) { Steuerung = split[0]; }
-        	if ( l >= 1 ) { NcVersion = split[1]; }
-        	if ( l >= 2 ) { PlcVersion = split[2]; }
-        	if ( l >= 3 ) { Zusatzoptionen = split[3]; }
-        	return OK; 
-        } else { 
-        	showLSVError();
-        	return ERROR; 
-        }
+		if ( Send(data) == false ) { return TIMEOUT; }
+		if ( LSV_info.equals("S_VR") ) {
+			String split[] = LSV_data.split(CHAR0);
+			int l = split.length;
+			if ( l >= 0 ) { Steuerung = split[0]; }
+			if ( l >= 1 ) { NcVersion = split[1]; }
+			if ( l >= 2 ) { PlcVersion = split[2]; }
+			if ( l >= 3 ) { Zusatzoptionen = split[3]; }
+			return OK; 
+		} else { 
+			showLSVError();
+			return ERROR; 
+		}
 	}
 
 
 	//=========================================================================
 	public static byte SetSysCmd(int cmd) {
 		String data = CHAR0 + CHAR0 + CHAR0 + (char)2 + "C_CC" + CHAR0 + (char)cmd;
-    	if ( Send(data) == false ) { return TIMEOUT; }
-        if ( LSV_info.equals("T_OK") ) {
-        	return OK; 
-        } else { 
-        	showLSVError();
-        	return ERROR; 
-        }
+		if ( Send(data) == false ) { return TIMEOUT; }
+		if ( LSV_info.equals("T_OK") ) {
+			return OK; 
+		} else { 
+			showLSVError();
+			return ERROR; 
+		}
 	}
 
 
 	//=========================================================================
 	public static byte GetSysPar() {
 		String data = CHAR0.concat(CHAR0).concat(CHAR0).concat(CHAR0).concat("R_PR");
-    	if ( Send(data) == false ) { return TIMEOUT; }
-        if ( LSV_info.equals("S_PR") ) {
-        	LSV_SysParam.makeParam(LSV_data);
-        	return OK; 
-        } else { 
-        	showLSVError();
-        	return ERROR; 
-        }
+		if ( Send(data) == false ) { return TIMEOUT; }
+		if ( LSV_info.equals("S_PR") ) {
+			LSV_SysParam.makeParam(LSV_data);
+			return OK; 
+		} else { 
+			showLSVError();
+			return ERROR; 
+		}
 	}
 
 	
@@ -351,13 +356,13 @@ public class LSV_Client {
 		String loByte = Character.toString (((char) (length & 0xFF)));
 		String hiByte = Character.toString (((char) ((length >> 8) & 0xFF)));
 		String data = CHAR0.concat(CHAR0).concat(hiByte).concat(loByte).concat(s);
-    	if ( Send(data) == false ) { return TIMEOUT; }
-        if ( LSV_info.equals("T_OK") ) {
-        	return OK; 
-        } else { 
-        	showLSVError();
-        	return ERROR; 
-        }
+		if ( Send(data) == false ) { return TIMEOUT; }
+		if ( LSV_info.equals("T_OK") ) {
+			return OK; 
+		} else { 
+			showLSVError();
+			return ERROR; 
+		}
 	}
 
 	
@@ -368,13 +373,13 @@ public class LSV_Client {
 		String loByte = Character.toString (((char) (length & 0xFF)));
 		String hiByte = Character.toString (((char) ((length >> 8) & 0xFF)));
 		String data = CHAR0.concat(CHAR0).concat(hiByte).concat(loByte).concat(s);
-    	if ( Send(data) == false ) { return TIMEOUT; }
-        if ( LSV_info.equals("T_OK") ) {
-        	return OK; 
-        } else { 
-        	showLSVError();
-        	return ERROR; 
-        }
+		if ( Send(data) == false ) { return TIMEOUT; }
+		if ( LSV_info.equals("T_OK") ) {
+			return OK; 
+		} else { 
+			showLSVError();
+			return ERROR; 
+		}
 	}
 
 
@@ -385,13 +390,13 @@ public class LSV_Client {
 		String loByte = Character.toString (((char) (length & 0xFF)));
 		String hiByte = Character.toString (((char) ((length >> 8) & 0xFF)));
 		String data = CHAR0.concat(CHAR0).concat(hiByte).concat(loByte).concat(s);
-    	if ( Send(data) == false ) { return TIMEOUT; }
+		if ( Send(data) == false ) { return TIMEOUT; }
 		if ( LSV_info.equals("S_FI") ) {
 			return OK;
-        } else { 
-        	showLSVError();
-        	return ERROR; 
-        }
+		} else { 
+			showLSVError();
+			return ERROR; 
+		}
 	}
 
 
@@ -403,16 +408,15 @@ public class LSV_Client {
 		String loByte = Character.toString (((char) (length & 0xFF)));
 		String hiByte = Character.toString (((char) ((length >> 8) & 0xFF)));
 		String data = CHAR0.concat(CHAR0).concat(hiByte).concat(loByte).concat(s);
-    	if ( Send(data) == false ) { return TIMEOUT; }
+		if ( Send(data) == false ) { return TIMEOUT; }
 		if ( LSV_info.equals("T_OK") ) {
 			return OK;
-	    } else { 
-	    	showLSVError();
-	    	return ERROR; 
-	    }
+		} else { 
+			showLSVError();
+			return ERROR; 
+		}
 	}
 
-private static 		InputStreamReader in;
 
 	//=========================================================================
 	public static byte SendFile(String filename, String pcFile) {
@@ -437,11 +441,11 @@ private static 		InputStreamReader in;
 		String loByte = Character.toString (((char) (length & 0xFF)));
 		String hiByte = Character.toString (((char) ((length >> 8) & 0xFF)));
 		String data = CHAR0.concat(CHAR0).concat(hiByte).concat(loByte).concat("C_FL").concat(s);
-    	// Daten Senden/Empfangen
+		// Daten Senden/Empfangen
 		if ( Send(data) == false ) {
 			// socket Fehler beim senden
-    		return TIMEOUT; 
-    	}
+			return TIMEOUT; 
+		}
 		if (LSV_info.equals("T_OK")) {
 			try {
 				in = new InputStreamReader(new FileInputStream(pcFile), "ISO-8859-1");
@@ -477,14 +481,14 @@ private static 		InputStreamReader in;
 					data = CHAR0.concat(CHAR0).concat(hiByte).concat(loByte).concat("S_FL").concat(s);
 					
 					// Daten senden
-			    	if ( Send(data) == false ) {
+					if ( Send(data) == false ) {
 						// socket Fehler beim senden
-			    		in.close();
-			    		return ERROR; 
-			    	} else if ( LSV_info.equals("T_OK") == false) {
+						in.close();
+						return ERROR; 
+					} else if ( LSV_info.equals("T_OK") == false) {
 						// senden war fehlerhaft
-			        	showLSVError();
-			        	in.close();
+						showLSVError();
+						in.close();
 						return ERROR;
 					}
 				}
@@ -495,12 +499,12 @@ private static 		InputStreamReader in;
 				
 				// File Done
 				data = CHAR0.concat(CHAR0).concat(CHAR0).concat(CHAR0).concat("T_FD");
-		    	if ( Send(data) == false ) { return ERROR; }
+				if ( Send(data) == false ) { return ERROR; }
 				if ( LSV_info.equals("T_OK") == false ) {
-		        	showLSVError();
+					showLSVError();
 					return ERROR; 
 				}
-	        	return OK; 
+				return OK; 
 			} catch ( IOException e ) {
 				SyncWithUi.ConsolePrintln("exception ".concat(e.getMessage()),Console.RED);
 				if ( in != null ) {
@@ -509,15 +513,80 @@ private static 		InputStreamReader in;
 					} catch ( IOException e1 ) { 
 						
 					}
-	        	return ERROR;
+				return ERROR;
 				}
 			}
-        } 
-    	showLSVError();
+		} 
+		showLSVError();
 		return ERROR;
 	}
 
 
+
+	//=========================================================================
+	public static byte ReceiveFile(String filename, String pcFile) {
+
+		String s = filename.concat(CHAR0);
+
+		@SuppressWarnings("unused")
+		boolean binary = false;
+		if (Global.prefAllwaysBinary == false) {
+			for ( String binFile : Global.binFiles ) {
+				if ( filename.toLowerCase().endsWith(binFile) ){
+					s += Character.toString ((char) 1);
+					binary = true;
+					break;
+				}
+			}
+		} else {
+			binary = true;
+		}
+
+		// R_FL Kommando erstellen
+		int length = s.length();
+		String loByte = Character.toString (((char) (length & 0xFF)));
+		String hiByte = Character.toString (((char) ((length >> 8) & 0xFF)));
+		String data = CHAR0.concat(CHAR0).concat(hiByte).concat(loByte).concat("R_FL").concat(s);
+		try {
+			// Daten empfangen
+			if ( Send(data) == false ) {
+				// socket Fehler beim senden
+				in.close();
+				return ERROR; 
+			} 
+			String logfileData = "";
+			while ( LSV_info.equals("S_FL") ) {
+				logfileData += LSV_data;
+				data = CHAR0.concat(CHAR0).concat(CHAR0).concat(CHAR0).concat("T_OK");
+	 			if ( Send(data) == false ) {
+					// socket Fehler beim senden
+					in.close();
+					return ERROR; 
+				} 
+			}
+
+			if (LSV_info.equals("T_FD") ) {
+				LogfileView.show();
+				LogfileView.setTextSync(logfileData);
+ 				return OK;
+ 			}
+	
+		} catch ( IOException e ) {
+			SyncWithUi.ConsolePrintln("exception ".concat(e.getMessage()),Console.RED);
+			if ( in != null ) {
+				try {
+					in.close();
+				} catch ( IOException e1 ) { 
+					
+				}
+			}
+			return ERROR;
+		}
+		showLSVError();
+		return ERROR;
+	}
+	
+	
 	//=========================================================================
 	public static void showLSVError() {
 		if ( LSV_data.isEmpty() == false ) {
